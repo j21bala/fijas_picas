@@ -4,21 +4,97 @@ numero = input("Ingresa un número de 4 dígitos diferentes: ")
 digitos = list(numero)
 #Utilizo un set para comprobar que los números no sean iguales
 cadena = set(digitos)
+
 while len(digitos) == 4 and len(digitos) == len(cadena):
 
-    #Definimos la primera función que establece la lógica de fijas y picas
 
-    def comprobar_picas_fijas(cadena, suposicion):
+    #Función para generar cada número del 0-9 y unirlos con el set en forma de lista 
+
+    def generar_num():
+
+        candidatos = []
+        for d1 in range(10):
+            for d2 in range(10):
+                for d3 in range(10):
+                    for d4 in range(10):
+                        suposicion = str(d1) + str(d2) + str(d3) + str(d4)
+                        if len(set(suposicion)) == 4:
+                            #Ponemos la lista adentro del array de candidatos y lo retornamos
+                            candidatos.append(suposicion)
+        return candidatos
+
+
+    #Integramos la lógica del juego con otra función
+
+    def comprobar_picas_fijas(candidato, suposicion):
         fijas = 0
         picas = 0
-        for i in range (len(cadena)):
+        for i in range (len(candidato)):
             if cadena[i] == suposicion[i]:
                 fijas += 1
-            elif suposicion[i] in cadena:
+            elif suposicion[i] in candidato:
         
                 picas +=1
                 
         return fijas, picas
+    
+  
+    def buscar_num():
+    
+        numero_candidato = generar_num()
+        intentos = 0
+        fijas = 0
+
+        print("<----Juego de Picas y Fijas---->")
+        print(f"Primer número: {numero_candidato}")
+
+        while fijas != 4 and numero_candidato:
+            intentos += 1
+
+            numero_suposicion = numero_candidato[0]
+
+            print(f"Intento #{intentos}, Mi suposición es: {numero_suposicion}")
+            
+            while True:
+                try:
+                    fijas = int(input(f"¿Cuantas fijas tiene {numero_suposicion}?"))
+                    picas = int(input(f"¿Cuantas picas tiene {numero_suposicion}?"))
+
+                    if 0 <= fijas <= 4 and 0 <= picas <= 4 and (fijas  +  picas) <= 4:
+                        break
+                    else:
+                        print("La cantidad no puede exceder 4, intentalo de  nuevo")
+
+                except ValueError:
+                    print("Ingresa un número entero válido")
+
+            if fijas == 4:
+                print(f"Adiviné tu número, es: {numero_suposicion}")
+                return
+            
+
+            nueva_lista = []
+            for candidato in numero_suposicion:
+                f, p = comprobar_picas_fijas(numero_suposicion, candidato)
+
+                if f == fijas and p == picas:
+                    nueva_lista.append(candidato)
+
+            numero_candidato = nueva_lista
+
+        
+            print(f"Candidatos restantes: {numero_candidato}")
+
+        if not numero_candidato and fijas != 4:
+            print("Error con las respuesta de fijas/picas")
+
+
+            
+
+            
+
+
+
 
             
 
